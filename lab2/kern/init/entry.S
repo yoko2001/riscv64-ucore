@@ -13,14 +13,36 @@ kern_entry:
     # t0 >>= 12，变为三级页表的物理页号
     srli    t0, t0, 12
 
+    # v1.9 准备sptbr
+    # csrw    sptbr, t0
+    
+    # v1.11 准备satp
     # t1 := 8 << 60，设置 satp 的 MODE 字段为 Sv39
     li      t1, 8 << 60
     # 将刚才计算出的预设三级页表物理页号附加到 satp 中
     or      t0, t0, t1
     # 将算出的 t0(即新的MODE|页表基址物理页号) 覆盖到 satp 中
     csrw    satp, t0
-    # 使用 sfence.vma 指令刷新 TLB
+
+    # LOG: 执行页表切换前ecall输出字符'G'
+    li x17, 1
+    li x10, 0x47
+    li x11, 0
+    li x12, 0
+    ecall
+
+    # v1.9 使用 sfence.vm 指令刷新TLB
+    # sfence.vm
+    # v1.11 使用 sfence.vma 指令刷新 TLB
     sfence.vma
+
+    # LOG: 执行页表切换后ecall输出字符'G'
+    li x17, 1
+    li x10, 0x47
+    li x11, 0
+    li x12, 0
+    ecall
+
     # 从此，我们给内核搭建出了一个完美的虚拟内存空间！
     #nop # 可能映射的位置有些bug。。插入一个nop
     

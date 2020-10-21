@@ -167,6 +167,15 @@ qemu: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 		-nographic \
 		-bios default \
 		-device loader,file=$(UCOREIMG),addr=0x80200000
+qemu-gdb: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
+	$(V)$(QEMU) \
+		-machine virt \
+		-s -S\
+		-nographic \
+		-bios default \
+		-device loader,file=$(UCOREIMG),addr=0x80200000
+gdb:
+	$(GDB) -x tools/gdbinit
 
 test: $(UCOREIMG) $(SWAPIMG) $(SFSIMG)
 	$(V)$(QEMU) \
