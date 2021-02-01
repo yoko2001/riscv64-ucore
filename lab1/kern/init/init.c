@@ -38,7 +38,7 @@ int kern_init(void) {
 
     // LAB1: CAHLLENGE 1 If you try to do it, uncomment lab1_switch_test()
     // user/kernel mode switch test
-    // lab1_switch_test();
+    lab1_switch_test();
     /* do nothing */
     while (1)
         ;
@@ -61,15 +61,20 @@ void grade_backtrace(void) { grade_backtrace0(0, (unsigned long long)kern_init, 
 
 static void lab1_print_cur_status(void) {
     static int round = 0;
+    cprintf("sstatus 0x%08x ", read_csr(sstatus));
+    const char* who = (read_csr(sstatus) & SSTATUS_SPP) ? "KERNEL" : "USER";
+    cprintf("Current In %s \n", who);
     round++;
 }
 
 static void lab1_switch_to_user(void) {
     // LAB1 CHALLENGE 1 : TODO
+    clear_csr(sstatus, SSTATUS_SPP);
 }
 
 static void lab1_switch_to_kernel(void) {
     // LAB1 CHALLENGE 1 :  TODO
+    set_csr(sstatus, SSTATUS_SPP);
 }
 
 static void lab1_switch_test(void) {

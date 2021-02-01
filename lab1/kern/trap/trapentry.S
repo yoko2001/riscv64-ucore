@@ -5,6 +5,9 @@
     csrw sscratch, sp
 
     addi sp, sp, -36 * REGBYTES
+    #REGBYTES是riscv.h定义的常量，表示一个寄存器占据几个字节
+    #让栈顶指针向低地址空间延伸 36个寄存器的空间，可以放下一个trapFrame结构体。
+    #除了32个通用寄存器，我们还要保存4个和中断有关的CSR
     # save x registers
     STORE x0, 0*REGBYTES(sp)
     STORE x1, 1*REGBYTES(sp)
@@ -38,6 +41,7 @@
     STORE x30, 30*REGBYTES(sp)
     STORE x31, 31*REGBYTES(sp)
 
+    # RISCV不能直接从CSR写到内存, 需要csrr把CSR读取到通用寄存器，再从通用寄存器STORE到内存
     # get sr, epc, badvaddr, cause
     # Set sscratch register to 0, so that if a recursive exception
     # occurs, the exception vector knows it came from the kernel
@@ -99,11 +103,11 @@
     .endm
 
     .globl __alltraps
-.align(2)
+.align(2) #中断入口点 __alltraps必须四字节对齐
 __alltraps:
     SAVE_ALL
 
-    move  a0, sp
+    move  a0, sp # 传参
     jal trap
     # sp should be the same as before "jal trap"
 

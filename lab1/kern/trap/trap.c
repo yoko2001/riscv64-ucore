@@ -28,6 +28,7 @@ void idt_init(void) {
      * presently executing in the kernel */
     write_csr(sscratch, 0);
     /* Set the exception vector address */
+    //我们保证__alltraps的地址是四字节对齐的，将__alltraps这个符号的地址直接写到stvec寄存器
     write_csr(stvec, &__alltraps);
 }
 

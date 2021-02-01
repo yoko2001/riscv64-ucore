@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <defs.h>
 #include <stdio.h>
-
+#define STACKFRAME_DEPTH 5
 /* *
  * print_kerninfo - print the information about kernel, including the location
  * of kernel entry, the start addresses of data and text segements, the start
@@ -22,8 +22,7 @@ void print_kerninfo(void) {
  * print_debuginfo - read and print the stat information for the address @eip,
  * and info.eip_fn_addr should be the first address of the related function.
  * */
-void print_debuginfo(uintptr_t eip) { panic("Not Implemented!"); }
-
+void print_debuginfo(uintptr_t eip) { panic("Not Implemented!"); } 
 /* *
  * print_stackframe - print a list of the saved eip values from the nested
  * 'call'
@@ -89,4 +88,5 @@ void print_stackframe(void) {
      *                   the calling funciton's ebp = ss:[ebp]
      */
     panic("Not Implemented!");
+    //DJL:对riscv是无法做这一项的
 }

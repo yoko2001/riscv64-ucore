@@ -50,7 +50,7 @@ SH		:= sh
 TR		:= tr
 TOUCH	:= touch -c
 PYTHON	:= python3
-TERM	:= miniterm
+TERM	:= python3 /usr/bin/miniterm.py
 
 OBJDIR	:= obj
 BINDIR	:= bin
